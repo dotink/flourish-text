@@ -2,7 +2,7 @@
 	"name": "dotink/flourish-text",
 	"description": "Language sensitive text transformation and translation",
 	"keywords": ["text transformation", "i18n", "language", "multi-lingual"],
-	"license": "AGPL 3.0",
+	"license": "AGPL-3.0",
 	"type": "opus-package",
 	"authors": [
 		{
