@@ -497,7 +497,7 @@
 		 * @param mixed $values The value(s) to use for the text
 		 * @return void
 		 */
-		public function __construct($value)
+		public function __construct($value = NULL)
 		{
 			$this->values = self::normalizeValue($value);
 		}
