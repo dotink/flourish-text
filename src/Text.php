@@ -29,11 +29,24 @@
 		 */
 		static protected $cache = [
 			'camelize'     => [0 => array(), 1 => array()],
+			'dashize'      => array(),
 			'humanize'     => array(),
 			'pluralize'    => array(),
 			'singularize'  => array(),
 			'underscorize' => array()
 		];
+
+
+		/**
+		 * RegEx responsible for matching acronym distinction in camelcase strings
+		 *
+		 * This should be overloaded by child translation classes.  This one handles 'en_US' words.
+		 *
+		 * @static
+		 * @access protected
+		 * @var string
+		 */
+		static protected $camelAcronymRX = '/(?<=[A-Z])([A-Z])(?=([a-rt-z]|s[a-z]))/';
 
 
 		/**
@@ -70,31 +83,24 @@
 		 *
 		 * This should be overloaded by child translation classes.  This one handles 'en_US' words.
 		 *
-		 *
-		 * Description: Underscore before capital letters following lowercase
-		 *
 		 * @static
 		 * @access protected
 		 * @var string
 		 */
-		static protected $camelUnderscoreWordRX = '/(?<=[a-z])([A-Z])/';
+		static protected $camelWordRX = '/(?<=[a-z])([A-Z])/';
 
 
 		/**
-		 * RegEx responsible for matching acronym distinction in camelcase strings
+		 * Rules for dashizing difficult words
 		 *
-		 * This should be overloaded by child translation classes.  This one handles 'en_US' words.
-		 *
-		 * Description: Underscore between uppercase letters if the second letter is followed by
-		 * any lowercae letter besides s, or s followed by a non s.  This handles most acronym
-		 * cases, whereby an acronym followed by 's' implies it's a plural acronym, however, one
-		 * followed by s + another letter implies the last capital letter was part of a new word.
+		 * These should be overloaded by child translation classes.  These handle 'en_US' words.
 		 *
 		 * @static
 		 * @access protected
-		 * @var string
+		 * @var array
 		 */
-		static protected $camelUnderscoreAcronymRX = '/(?<=[A-Z])([A-Z])(?=([a-rt-z]|s[a-z]))/';
+		static protected $dashizeRules = array();
+
 
 		/**
 		 * The final join separator, will be spaced and in place of standard separator
@@ -210,6 +216,12 @@
 
 
 		/**
+		 *
+		 */
+		static protected $titleArticlesRX = '#(?:a|an|and|at|but|for|in|nor|on|or|to|the)\s+#i';
+
+
+		/**
 		 * Rules for underscorizing difficult words
 		 *
 		 * These should be overloaded by child translation classes.  These handle 'en_US' words.
@@ -230,7 +242,7 @@
 		 * @access protected
 		 * @var string
 		 */
-		static protected $underscoreWordRX = '#_([a-z0-9])#i';
+		static protected $underscoreWordRX = '#[_-]([a-z0-9])#i';
 
 
 		/**
@@ -537,11 +549,6 @@
 
 				if (isset(static::$camelizeRules[$string])) {
 					$string = static::$camelizeRules[$string];
-
-					if ($upper) {
-						$string = UTF8::ucfirst($string);
-					}
-
 				} else {
 
 					//
@@ -553,20 +560,11 @@
 					}
 
 					//
-					// See if we're already camelized
+					// See if we're not camelized already
 					//
 
-					if (strpos($string, '_') === FALSE) {
-						if ($upper) {
-							$string = UTF8::ucfirst($string);
-						}
-
-					} else {
+					if (strpos($string, '_') !== FALSE || strpos($string, '-') !== FALSE){
 						$string[0] = UTF8::lower($string[0]);
-
-						if ($upper) {
-							$string = UTF8::ucfirst($string);
-						}
 
 						$string = preg_replace_callback(
 							static::$underscoreWordRX,
@@ -577,6 +575,10 @@
 						);
 					}
 				}
+
+				$string = $upper
+					? UTF8::ucfirst($string)
+					: UTF8::lcfirst($string);
 
 				$new->values[$i] = static::$cache['camelize'][$upper][$original] = $string;
 			}
@@ -645,12 +647,59 @@
 
 
 		/**
+		 *
+		 */
+		public function dashize()
+		{
+			$new = clone $this;
+
+			foreach ($new->values as $i => $string) {
+
+				if (isset(static::$cache['dashize'][$string])) {
+					$new->values[$i] = static::$cache['dashize'][$string];
+					continue;
+				}
+
+				$original = $string;
+
+				if (isset(static::$dashizeRules[$string])) {
+
+					//
+					// Handle custom rules
+					//
+
+					$string = static::$dashizeRules[$string];
+
+				} elseif (strpos($string, ' ') !== FALSE) {
+
+					//
+					// Allow humanized strings to be passed in
+					//
+
+					$string = UTF8::lower(preg_replace('#\s+#', '-', $string));
+
+				} elseif (strpos($string, '_') !== FALSE) {
+					$string = str_replace('_', '-', $string);
+
+				} elseif (UTF8::lower($string) != $string) {
+					$string = preg_replace(static::$camelWordRX, '-$1', $string);
+					$string = preg_replace(static::$camelAcronymRX, '-$1', $string);
+					$string = UTF8::lower($string);
+				}
+
+				$new->values[$i] = static::$cache['dashize'][$original] = $string;
+			}
+
+			return $new;
+		}
+
+		/**
 		 * Gets a new Text object whose value(s) is the human form of the original
 		 *
 		 * @access public
 		 * @return Text A new text object whose value(s) has been humanized
 		 */
-		public function humanize()
+		public function humanize($title = FALSE)
 		{
 			$new = clone $this;
 
@@ -662,9 +711,24 @@
 
 				$original = $string;
 
-				//
-				// Need to implement some functionality
-				//
+				if (strpos($string, ' ') === FALSE) {
+					if (strpos($string, '_') === FALSE) {
+						$string = self::underscorize($string);
+					}
+
+					$string = str_replace('_', ' ', $string);
+					$string = $title
+						? ucwords($string)
+						: ucfirst($string);
+
+					$string = preg_replace_callback(
+						static::$titleArticlesRX,
+						function($match) {
+							return UTF8::lower($match[0]);
+						},
+						$string
+					);
+				}
 
 				$new->values[$i] = static::$cache['humanize'][$original] = $string;
 			}
@@ -881,7 +945,7 @@
 		 * Converts a `camelCase`, human-friendly or `underscore_notation` string to
 		 * `underscore_notation`
 		 *
-		 * This will use the $camelUnderscoreWordRX and the $camelUnderscoreAcronymRX variables
+		 * This will use the $camelUnderscoreWordRX and the $camelAcronymRX variables
 		 * for the tranlation class and place an underscore before the second match.
 		 *
 		 * @param  string $string  The string to convert
@@ -916,9 +980,12 @@
 
 					$string = UTF8::lower(preg_replace('#\s+#', '_', $string));
 
+				} elseif (strpos($string, '-') !== FALSE) {
+					$string = str_replace('-', '_', $string);
+
 				} elseif (UTF8::lower($string) != $string) {
-					$string = preg_replace(static::$camelUnderscoreWordRX, '_$1', $string);
-					$string = preg_replace(static::$camelUnderscoreAcronymRX, '_$1', $string);
+					$string = preg_replace(static::$camelWordRX, '_$1', $string);
+					$string = preg_replace(static::$camelAcronymRX, '_$1', $string);
 					$string = UTF8::lower($string);
 				}
 
