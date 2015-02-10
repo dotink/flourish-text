@@ -1,17 +1,16 @@
-<?php namespace Dotink\Flourish {
-
+<?php namespace Dotink\Flourish
+{
 	/**
 	 * Provides internationlization and transformation support for strings
 	 *
-	 * @copyright  Copyright (c) 2007-2011 Will Bond, others
-	 * @author     Will Bond           [wb]  <will@flourishlib.com>
-	 * @author     Matthew J. Sahagian [mjs] <msahagian@dotink.org>
+	 * @copyright Copyright (c) 2007-2015 Will Bond, Matthew J. Sahagian, others
+	 * @author Will Bond [wb] <will@flourishlib.com>
+	 * @author Matthew J. Sahagian [mjs] <msahagian@dotink.org>
 	 *
-	 * @license    Please see the LICENSE file at the root of this distribution
+	 * @license Please reference the LICENSE.md file at the root of this distribution
 	 *
-	 * @package    Flourish
+	 * @package Flourish
 	 */
-
 	class Text
 	{
 		const CLASS_LOCALE   = 'en_us';
@@ -692,6 +691,7 @@
 
 			return $new;
 		}
+
 
 		/**
 		 * Gets a new Text object whose value(s) is the human form of the original
