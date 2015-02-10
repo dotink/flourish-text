@@ -1,8 +1,8 @@
 # Text
 ## Provides internationlization and transformation support for strings
 
-_Copyright (c) 2007-2011 Will Bond, others_.
-_Please see the LICENSE file at the root of this distribution_
+_Copyright (c) 2007-2015 Will Bond, Matthew J. Sahagian, others_.
+_Please reference the LICENSE.md file at the root of this distribution_
 
 #### Namespace
 
@@ -55,6 +55,14 @@ Cache for plural <-> singular and underscore <-> camelcase
 
 This should be overloaded by child translation classes.
 
+#### <span style="color:#6a6e3d;">$camelAcronymRX</span>
+
+RegEx responsible for matching acronym distinction in camelcase strings
+
+##### Details
+
+This should be overloaded by child translation classes.  This one handles 'en_US' words.
+
 #### <span style="color:#6a6e3d;">$camelCaseSplitRX</span>
 
 RegEx responsible for splitting off the last word of a camelcase string
@@ -71,7 +79,7 @@ Rules for camelizing difficult words
 
 These should be overloaded by child translation classes.  These handle 'en_US' words.
 
-#### <span style="color:#6a6e3d;">$camelUnderscoreWordRX</span>
+#### <span style="color:#6a6e3d;">$camelWordRX</span>
 
 RegEx responsible for matching normal word distinction in camelcase strings
 
@@ -79,21 +87,13 @@ RegEx responsible for matching normal word distinction in camelcase strings
 
 This should be overloaded by child translation classes.  This one handles 'en_US' words.
 
+#### <span style="color:#6a6e3d;">$dashizeRules</span>
 
-Description: Underscore before capital letters following lowercase
-
-#### <span style="color:#6a6e3d;">$camelUnderscoreAcronymRX</span>
-
-RegEx responsible for matching acronym distinction in camelcase strings
+Rules for dashizing difficult words
 
 ##### Details
 
-This should be overloaded by child translation classes.  This one handles 'en_US' words.
-
-Description: Underscore between uppercase letters if the second letter is followed by
-any lowercae letter besides s, or s followed by a non s.  This handles most acronym
-cases, whereby an acronym followed by 's' implies it's a plural acronym, however, one
-followed by s + another letter implies the last capital letter was part of a new word.
+These should be overloaded by child translation classes.  These handle 'en_US' words.
 
 #### <span style="color:#6a6e3d;">$finalJoinSeparator</span>
 
@@ -131,6 +131,8 @@ an $n argument, it will reverse sort the numeric keys and find those rules which
 based on whether the $n argument is greater than or equal to the key.
 
 These should be overloaded by child translation classes.  These handle 'en_US' words.
+
+#### <span style="color:#6a6e3d;">$titleArticlesRX</span>
 
 #### <span style="color:#6a6e3d;">$underscorizeRules</span>
 
@@ -193,7 +195,7 @@ Creates a new text object with a specific locale
 				$values
 			</td>
 			<td>
-									<a href="http://www.php.net/language.pseudo-types.php">mixed</a>
+									<a href="http://php.net/language.pseudo-types">mixed</a>
 				
 			</td>
 			<td>
@@ -206,7 +208,7 @@ Creates a new text object with a specific locale
 				$locale
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -252,7 +254,7 @@ Maps a translation class to a locale
 				$class
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -265,7 +267,7 @@ Maps a translation class to a locale
 				$locale
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -325,7 +327,7 @@ timing should be chosen.
 				$timing
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -388,7 +390,7 @@ mapped to handle that locale.  This class only handles 'en_US' locale.
 				$locale
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -434,7 +436,7 @@ Splits the last word off of a `camelCase` or `underscore_notation` string
 				$string
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -486,7 +488,7 @@ count value is equal to one, normalization will recurse on the sole item.
 				$value
 			</td>
 			<td>
-									<a href="http://www.php.net/language.pseudo-types.php">mixed</a>
+									<a href="http://php.net/language.pseudo-types">mixed</a>
 				
 			</td>
 			<td>
@@ -535,7 +537,7 @@ Constructs a new text object
 				$values
 			</td>
 			<td>
-									<a href="http://www.php.net/language.pseudo-types.php">mixed</a>
+									<a href="http://php.net/language.pseudo-types">mixed</a>
 				
 			</td>
 			<td>
@@ -601,7 +603,7 @@ Gets a new Text object whose value(s) is the camelCase form of the original's
 				$upper
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.boolean.php">boolean</a>
+									<a href="http://php.net/language.types.boolean">boolean</a>
 				
 			</td>
 			<td>
@@ -657,7 +659,7 @@ example, to reverse the array in non-left-to-right languages.
 				$domain
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -670,7 +672,7 @@ example, to reverse the array in non-left-to-right languages.
 				$component
 			</td>
 			<td>
-									<a href="http://www.php.net/language.pseudo-types.php">mixed</a>
+									<a href="http://php.net/language.pseudo-types">mixed</a>
 				
 			</td>
 			<td>
@@ -683,7 +685,7 @@ example, to reverse the array in non-left-to-right languages.
 				...
 			</td>
 			<td>
-									<a href="http://www.php.net/language.pseudo-types.php">mixed</a>
+									<a href="http://php.net/language.pseudo-types">mixed</a>
 				
 			</td>
 			<td>
@@ -706,6 +708,11 @@ example, to reverse the array in non-left-to-right languages.
 		</dd>
 	
 </dl>
+
+
+<hr />
+
+#### <span style="color:#3e6a6e;">dashize()</span>
 
 
 <hr />
@@ -750,7 +757,7 @@ the current one's values.
 				$singular_form
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -763,7 +770,7 @@ the current one's values.
 				$plural_form
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -776,7 +783,7 @@ the current one's values.
 				$single_digit_words
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.boolean.php">boolean</a>
+									<a href="http://php.net/language.types.boolean">boolean</a>
 				
 			</td>
 			<td>
@@ -822,7 +829,7 @@ Gets a new Text object whose value is the values of the current object joined
 				$separator
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -835,7 +842,7 @@ Gets a new Text object whose value is the values of the current object joined
 				$final_separator
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -881,7 +888,7 @@ Makes the value of the Text object plural
 				$quantity
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.integer.php">integer</a>
+									<a href="http://php.net/language.types.integer">integer</a>
 				
 			</td>
 			<td>
@@ -894,7 +901,7 @@ Makes the value of the Text object plural
 				$return_false_on_error
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.boolean.php">boolean</a>
+									<a href="http://php.net/language.types.boolean">boolean</a>
 				
 			</td>
 			<td>
@@ -940,7 +947,7 @@ Makes the values of the Text object singular
 				$return_false_on_error
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.boolean.php">boolean</a>
+									<a href="http://php.net/language.types.boolean">boolean</a>
 				
 			</td>
 			<td>
@@ -974,7 +981,7 @@ Converts a `camelCase`, human-friendly or `underscore_notation` string to
 
 ##### Details
 
-This will use the $camelUnderscoreWordRX and the $camelUnderscoreAcronymRX variables
+This will use the $camelUnderscoreWordRX and the $camelAcronymRX variables
 for the tranlation class and place an underscore before the second match.
 
 ###### Parameters
@@ -992,7 +999,7 @@ for the tranlation class and place an underscore before the second match.
 				$string
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
