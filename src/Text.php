@@ -874,7 +874,6 @@
 				foreach (array_reverse($set_sizes) as $set_size) {
 					if ($quantity >= $set_size) {
 						$rules = static::$singularToPluralRules[$set_size];
-
 						break;
 					}
 				}
@@ -884,6 +883,7 @@
 
 					if (preg_match($regex, $string)) {
 						$plural_string = $beginning . preg_replace($regex, $to, $string);
+						break;
 					}
 				}
 
@@ -933,6 +933,7 @@
 
 					if (preg_match($regex, $string)) {
 						$singular_string = $beginning . preg_replace($regex, $to, $string);
+						break;
 					}
 				}
 
