@@ -1,5 +1,5 @@
 Easy Text Transformation
-============
+=======
 
 Language sensitive text transformation and translation.
 
