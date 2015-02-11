@@ -215,7 +215,13 @@
 
 
 		/**
+		 * Words which we will not wish to capitalize in a title
 		 *
+		 * This should be overloaded by child translation classes.  This one handles 'en_US' words.
+		 *
+		 * @static
+		 * @access protected
+		 * @var string
 		 */
 		static protected $titleArticlesRX = '#(?:a|an|and|at|but|for|in|nor|on|or|to|the)\s+#i';
 
@@ -358,18 +364,16 @@
 		/**
 		 * Adds a callback for when a message is created using ::compose()
 		 *
-		 * The primary purpose of these callbacks is for internationalization of
-		 * error messaging in Flourish. The callback should accept a single
-		 * parameter, the message being composed and should return the message
-		 * with any modifications.
+		 * The primary purpose of these callbacks is for internationalization purposes.
 		 *
-		 * The timing parameter controls if the callback happens before or after
-		 * the actual composition takes place, which is simply a call to
-		 * [http://php.net/sprintf sprintf()]. Thus the message passed `'pre'`
-		 * will always be exactly the same, while the message `'post'` will include
-		 * the interpolated variables. Because of this, most of the time the `'pre'`
-		 * timing should be chosen.
+		 * The timing parameter controls if the callback happens before or after the actual
+		 * composition takes place, which is simply a call to `sprintf()`. Thus the message passed
+		 * `'pre'` will always be exactly the same, while the message `'post'` will include the
+		 * interpolated variables. Because of this, most of the time the `'pre'` timing should be
+		 * chosen.
 		 *
+		 * @static
+		 * @access public
 		 * @param string $timing When the callback should be executed - `'pre'` or `'post'`
 		 * @param callback $callback The callback
 		 * @return void
@@ -587,7 +591,7 @@
 
 
 		/**
-		 * Performs an [http://php.net/sprintf sprintf()] on text values via registered hooks
+		 * Performs an `sprintf()` on text values via registered hooks
 		 *
 		 * This is predominately used for translation.  The callback will receive the values of
 		 * the Text object as well as the provided domain.  If the value of the text object is
@@ -646,7 +650,10 @@
 
 
 		/**
+		 * Gets a new Text object whose value(s) is the dash separated form of the original
 		 *
+		 * @access public
+		 * @return Text A new text object whose value(s) has been dashized
 		 */
 		public function dashize()
 		{
@@ -738,15 +745,17 @@
 
 
 		/**
-		 * Gets a new Text object whose value is the singular or plural form based on quantity
-		 * the current one's values.
+		 * Get a new Text object, with a singular or plural form based current values quantity
 		 *
+		 * You can use `%d` to place the quantity in the string.
+		 *
+		 * @access public
 		 * @param string $singular_form The string to be returned for when `$quantity = 1`
-		 * @param string $plural_form The string to be returned for when `$quantity != 1`, use `%d` to place the quantity in the string
+		 * @param string $plural_form The string to be returned for when `$quantity != 1`
 		 * @param boolean $single_digit_words If the numbers 0 to 9 should be written out as words
-		 * @return Text A new text object whose value is the inflected word
+		 * @return Text A new text object whose value is the inflected string
 		 */
-		public function inflectOnQuantity($singular, $plural= NULL, $single_digit_words = FALSE)
+		public function inflect($singular, $plural= NULL, $single_digit_words = FALSE)
 		{
 			$quantity = count($this->values);
 			$singular = new static($singular);
@@ -786,6 +795,7 @@
 		/**
 		 * Gets a new Text object whose value is the values of the current object joined
 		 *
+		 * @access public
 		 * @param string $separator The separator to use, comma + space by default
 		 * @param string $final_separator The final separator, this can be more wordy
 		 * @return Text A new text object whose value is the joined string
@@ -832,11 +842,13 @@
 
 
 		/**
-		 * Makes the value of the Text object plural
+		 * Gets a new Text object whose value(s) is the plural form of the original's
 		 *
+		 * @access public
 		 * @param integer $quantity The number of items in the plural set
-		 * @param boolean $return_false_on_error If TRUE, returns FALSE in the event of an error
+		 * @param boolean $return_false_on_error If `TRUE`, returns `FALSE` in the event of an error
 		 * @return Text A new Text object whose values are the plural versions of this one's
+		 * @throws ProgrammerException If $return_false_on_error is `FALSE` and it can't pluralize
 		 */
 		public function pluralize($quantity = 2, $return_false_on_error = FALSE)
 		{
@@ -895,10 +907,12 @@
 
 
 		/**
-		 * Makes the values of the Text object singular
+		 * Gets a new Text object whose value(s) is the singular form of the original's
 		 *
-		 * @param boolean $return_false_on_error If TRUE, returns FALSE in the event of an error
+		 * @access public
+		 * @param boolean $return_false_on_error If `TRUE`, returns `FALSE` in the event of an error
 		 * @return Text A new Text object, whose values are the singular versions of the this one's
+		 * @throws ProgrammerException If $return_false_on_error is `FALSE` and it can't singularize
 		 */
 		public function singularize($return_false_on_error = FALSE)
 		{
@@ -942,14 +956,13 @@
 
 
 		/**
-		 * Converts a `camelCase`, human-friendly or `underscore_notation` string to
-		 * `underscore_notation`
+		 * Gets a new Text object whose value(s) is the underscore separated form of the original's
 		 *
 		 * This will use the $camelUnderscoreWordRX and the $camelAcronymRX variables
 		 * for the tranlation class and place an underscore before the second match.
 		 *
-		 * @param  string $string  The string to convert
-		 * @return string The converted string
+		 * @access public
+		 * @return Text A new Text object, whose values are underscorized versions of the this one's
 		 */
 		public function underscorize()
 		{

@@ -134,6 +134,12 @@ These should be overloaded by child translation classes.  These handle 'en_US' w
 
 #### <span style="color:#6a6e3d;">$titleArticlesRX</span>
 
+Words which we will not wish to capitalize in a title
+
+##### Details
+
+This should be overloaded by child translation classes.  This one handles 'en_US' words.
+
 #### <span style="color:#6a6e3d;">$underscorizeRules</span>
 
 Rules for underscorizing difficult words
@@ -300,17 +306,13 @@ Adds a callback for when a message is created using ::compose()
 
 ##### Details
 
-The primary purpose of these callbacks is for internationalization of
-error messaging in Flourish. The callback should accept a single
-parameter, the message being composed and should return the message
-with any modifications.
+The primary purpose of these callbacks is for internationalization purposes.
 
-The timing parameter controls if the callback happens before or after
-the actual composition takes place, which is simply a call to
-[http://php.net/sprintf sprintf()]. Thus the message passed `'pre'`
-will always be exactly the same, while the message `'post'` will include
-the interpolated variables. Because of this, most of the time the `'pre'`
-timing should be chosen.
+The timing parameter controls if the callback happens before or after the actual
+composition takes place, which is simply a call to `sprintf()`. Thus the message passed
+`'pre'` will always be exactly the same, while the message `'post'` will include the
+interpolated variables. Because of this, most of the time the `'pre'` timing should be
+chosen.
 
 ###### Parameters
 
@@ -632,7 +634,7 @@ Gets a new Text object whose value(s) is the camelCase form of the original's
 
 #### <span style="color:#3e6a6e;">compose()</span>
 
-Performs an [http://php.net/sprintf sprintf()] on text values via registered hooks
+Performs an `sprintf()` on text values via registered hooks
 
 ##### Details
 
@@ -714,6 +716,21 @@ example, to reverse the array in non-left-to-right languages.
 
 #### <span style="color:#3e6a6e;">dashize()</span>
 
+Gets a new Text object whose value(s) is the dash separated form of the original
+
+###### Returns
+
+<dl>
+	
+		<dt>
+			Text
+		</dt>
+		<dd>
+			A new text object whose value(s) has been dashized
+		</dd>
+	
+</dl>
+
 
 <hr />
 
@@ -737,10 +754,13 @@ Gets a new Text object whose value(s) is the human form of the original
 
 <hr />
 
-#### <span style="color:#3e6a6e;">inflectOnQuantity()</span>
+#### <span style="color:#3e6a6e;">inflect()</span>
 
-Gets a new Text object whose value is the singular or plural form based on quantity
-the current one's values.
+Get a new Text object, with a singular or plural form based current values quantity
+
+##### Details
+
+You can use `%d` to place the quantity in the string.
 
 ###### Parameters
 
@@ -774,7 +794,7 @@ the current one's values.
 				
 			</td>
 			<td>
-				The string to be returned for when `$quantity != 1`, use `%d` to place the quantity in the string
+				The string to be returned for when `$quantity != 1`
 			</td>
 		</tr>
 					
@@ -802,7 +822,7 @@ the current one's values.
 			Text
 		</dt>
 		<dd>
-			A new text object whose value is the inflected word
+			A new text object whose value is the inflected string
 		</dd>
 	
 </dl>
@@ -871,7 +891,7 @@ Gets a new Text object whose value is the values of the current object joined
 
 #### <span style="color:#3e6a6e;">pluralize()</span>
 
-Makes the value of the Text object plural
+Gets a new Text object whose value(s) is the plural form of the original's
 
 ###### Parameters
 
@@ -905,12 +925,25 @@ Makes the value of the Text object plural
 				
 			</td>
 			<td>
-				If TRUE, returns FALSE in the event of an error
+				If `TRUE`, returns `FALSE` in the event of an error
 			</td>
 		</tr>
 			
 	</tbody>
 </table>
+
+###### Throws
+
+<dl>
+
+	<dt>
+					Dotink\Flourish\ProgrammerException		
+	</dt>
+	<dd>
+		If $return_false_on_error is `FALSE` and it can't pluralize
+	</dd>
+
+</dl>
 
 ###### Returns
 
@@ -930,7 +963,7 @@ Makes the value of the Text object plural
 
 #### <span style="color:#3e6a6e;">singularize()</span>
 
-Makes the values of the Text object singular
+Gets a new Text object whose value(s) is the singular form of the original's
 
 ###### Parameters
 
@@ -951,12 +984,25 @@ Makes the values of the Text object singular
 				
 			</td>
 			<td>
-				If TRUE, returns FALSE in the event of an error
+				If `TRUE`, returns `FALSE` in the event of an error
 			</td>
 		</tr>
 			
 	</tbody>
 </table>
+
+###### Throws
+
+<dl>
+
+	<dt>
+					Dotink\Flourish\ProgrammerException		
+	</dt>
+	<dd>
+		If $return_false_on_error is `FALSE` and it can't singularize
+	</dd>
+
+</dl>
 
 ###### Returns
 
@@ -976,49 +1022,22 @@ Makes the values of the Text object singular
 
 #### <span style="color:#3e6a6e;">underscorize()</span>
 
-Converts a `camelCase`, human-friendly or `underscore_notation` string to
-`underscore_notation`
+Gets a new Text object whose value(s) is the underscore separated form of the original's
 
 ##### Details
 
 This will use the $camelUnderscoreWordRX and the $camelAcronymRX variables
 for the tranlation class and place an underscore before the second match.
 
-###### Parameters
-
-<table>
-	<thead>
-		<th>Name</th>
-		<th>Type(s)</th>
-		<th>Description</th>
-	</thead>
-	<tbody>
-			
-		<tr>
-			<td>
-				$string
-			</td>
-			<td>
-									<a href="http://php.net/language.types.string">string</a>
-				
-			</td>
-			<td>
-				The string to convert
-			</td>
-		</tr>
-			
-	</tbody>
-</table>
-
 ###### Returns
 
 <dl>
 	
 		<dt>
-			string
+			Text
 		</dt>
 		<dd>
-			The converted string
+			A new Text object, whose values are underscorized versions of the this one's
 		</dd>
 	
 </dl>
