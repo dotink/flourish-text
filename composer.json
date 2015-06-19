@@ -13,7 +13,7 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"imarc/opus": "dev-master",
+		"imarc/opus": "^1.0.0",
 		"dotink/flourish-core": "^1.0.0"
 	},
 	"autoload": {
